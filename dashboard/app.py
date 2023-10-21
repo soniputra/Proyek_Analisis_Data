@@ -38,19 +38,17 @@ with st.container():
     # Tab Customer (Question 1)
     with tab1:
         col1, col2 = st.columns((0.5, 0.8))
-        df_customer = pd.read_csv("Datasets\E_Commerce_Public_Dataset\customers_dataset.csv")
+        df_customer = pd.read_csv("customers_dataset.csv")
         df_customer_baru = df_customer.drop(['customer_id', 'customer_unique_id'], axis=1)
-        customer_state_list = st.multiselect(
+        with col1:
+            customer_state_list = st.multiselect(
             "Select Customer State",
             options = df_customer_baru["customer_state"].unique(),
             default = df_customer_baru["customer_state"].unique()
-        )
-        df_customer_state_sel = df_customer_baru.query(
-            "customer_state == @customer_state_list"
-        )
-        with col1:
-            st.subheader("DataFrame Customer")    
-            st.dataframe(data=df_customer_state_sel)
+            )
+            df_customer_state_sel = df_customer_baru.query(
+                "customer_state == @customer_state_list"
+            )
         with col2:
             st.subheader("Visualization")
             geog_state_vis = px.bar(
@@ -65,19 +63,17 @@ with st.container():
     # Tab Order (Question 2)
     with tab2:
         col1, col2 = st.columns((0.5, 0.8))
-        df_order = pd.read_csv("Datasets\E_Commerce_Public_Dataset\order_reviews_dataset.csv")
+        df_order = pd.read_csv("order_reviews_dataset.csv")
         df_order_baru = df_order.drop(['review_id', 'order_id', 'review_comment_title', 'review_comment_message'], axis=1)
-        review_score_list = st.multiselect(
-            "Select Customer State",
-            options = df_order_baru["review_score"].unique(),
-            default = df_order_baru["review_score"].unique()
-        )
-        df_review_score_sel = df_order_baru.query(
-            "review_score == @review_score_list"
-        )
         with col1:
-            st.subheader("DataFrame Customer")    
-            st.dataframe(data=df_review_score_sel)
+            review_score_list = st.multiselect(
+                "Select Review",
+                options = df_order_baru["review_score"].unique(),
+                default = df_order_baru["review_score"].unique()
+            )
+            df_review_score_sel = df_order_baru.query(
+                "review_score == @review_score_list"
+            )
         with col2:
             st.subheader("Visualization")
             # Total Review
@@ -104,8 +100,16 @@ with st.container():
     with tab3:
         # Insert Datasets
         st.markdown("""<h3 style='text-align:center;margin-bottom:50px'> Mapping Geolocation Dataset </h3>""", unsafe_allow_html=True)
-        df_geo = pd.read_csv("Datasets\E_Commerce_Public_Dataset\geolocation_dataset.csv")
-        st.map(df_geo,
+        df_geo = pd.read_csv("geolocation_dataset.csv")
+        map_list = st.multiselect(
+            "Select Geolocation Mapping",
+            options = df_geo["geolocation_state"].unique(),
+            default = df_geo["geolocation_state"].unique()
+        )
+        df_map_sel = df_geo.query(
+            "geolocation_state == @map_list"
+        )
+        st.map(df_map_sel,
             latitude= 'geolocation_lat',
             longitude='geolocation_lng',
             zoom = 2,
